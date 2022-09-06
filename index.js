@@ -1,5 +1,7 @@
 const { Client, GatewayIntentBits, EmbedBuilder  } = require('discord.js');
-const TOKEN = 'MTAxNjY5OTE3ODA2MTEzOTk2OA.GPGkN1.6nkv0EatLxAuj2nN3vmcw3MFBxX4n1aVM7bd5U';
+
+const { config } = require('./config'); 
+
 const PREFIX = '!';
 const REGEX_DICE = new RegExp(/(\d*)(D)(\d*)?/i);
 const colors = {
@@ -65,7 +67,7 @@ client.on('messageCreate', message => {
 
 });
 
-client.login(TOKEN);
+client.login(config.token);
 
 function randomize(limit) {
   min = Math.ceil(1);
