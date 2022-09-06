@@ -1,6 +1,6 @@
-const { Client, GatewayIntentBits, EmbedBuilder  } = require('discord.js');
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js');
 
-const { config } = require('./config'); 
+const { config } = require('./config');
 
 const PREFIX = '!';
 const REGEX_DICE = new RegExp(/(\d*)(D)(\d*)?/i);
@@ -60,15 +60,18 @@ client.on('messageCreate', message => {
       .setDescription(`**${message.member.displayName}** a lancé ${dice_number} dé${dice_number > 1 ? 's' : ''} de ${dice_limit}`)
       .addFields(
         { name: 'Résultats ', value: `${results.map(result => { return `[${result}]` })}` },
-      )
-      .setFooter({ text: `${message.author.username === 'PhoRésie' ? ' (PS: Love you White !) ' : ''}`})
+      );
 
-      message.channel.send({ embeds: [embed]});
+    if (message.author.username === 'PhoRésie') {
+      embed.setFooter({ text: '(PS: Love you White !)' })
+    }
+
+    message.channel.send({ embeds: [embed] });
   }
 
 });
 
-client.login(config.token);
+client.login(process.env.DISCORD_TOKEN || config.token);
 
 function randomize(limit) {
   min = Math.ceil(1);
