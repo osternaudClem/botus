@@ -57,10 +57,11 @@ client.on('messageCreate', message => {
 
     const embed = new EmbedBuilder()
       .setColor(color)
-      .setDescription(`**${message.member.displayName}** ${message.author.username === 'PhoRésie' ? ' (PS: Love you) ' : ''} a lancé ${dice_number} dé${dice_number > 1 ? 's' : ''} de ${dice_limit}`)
+      .setDescription(`**${message.member.displayName}** a lancé ${dice_number} dé${dice_number > 1 ? 's' : ''} de ${dice_limit}`)
       .addFields(
         { name: 'Résultats ', value: `${results.map(result => { return `[${result}]` })}` },
       )
+      setFooter({ text: `${message.author.username === 'PhoRésie' ? ' (PS: Love you White !) ' : ''}`})
 
       message.channel.send({ embeds: [embed]});
   }
