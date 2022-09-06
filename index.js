@@ -61,7 +61,7 @@ client.on('messageCreate', message => {
       .addFields(
         { name: 'Résultats ', value: `${results.map(result => { return `[${result}]` })}` },
       )
-      setFooter({ text: `${message.author.username === 'PhoRésie' ? ' (PS: Love you White !) ' : ''}`})
+      .setFooter({ text: `${message.author.username === 'PhoRésie' ? ' (PS: Love you White !) ' : ''}`})
 
       message.channel.send({ embeds: [embed]});
   }
