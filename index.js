@@ -24,12 +24,16 @@ const client = new Client({
   ],
 });
 
+const history = {};
+
 client.on('ready', () => {
   consoleLog('>>> Bot ready');
 });
 
 client.on('messageCreate', (message) => {
   if (message.author.bot) return;
+
+  console.log('>>> message', message);
 
   if (message.content.startsWith(PREFIX)) {
     const msg = message.content.substring(1);
@@ -42,8 +46,35 @@ client.on('messageCreate', (message) => {
 
     const cmd = msg.split(REGEX_DICE);
 
+    console.log('>>> cmd', cmd);
+
     const dice_number = cmd[1] || 1;
     const dice_limit = cmd[3] || 100;
+    const special_cmd = cmd[4] || null;
+
+    if (special_cmd) {
+      const channelId = message.channelId;
+
+      switch (special_cmd) {
+        case '-start':
+          startHistory(channelId);
+          message.channel.send('Start saving history...');
+          break;
+        case '-reset':
+          clearHistory(channelId);
+          message.channel.send('History cleared !');
+          break;
+        case 'stop':
+          message.channel.send('Stop saving results !');
+          break;
+        case '-show':
+          displayHistory(channelId);
+          break;
+        default:
+          break;
+      }
+      return;
+    }
 
     for (let i = 0; i < dice_number; i++) {
       results.push(randomize(dice_limit));
@@ -77,6 +108,10 @@ client.on('messageCreate', (message) => {
 
     getSentence(embed, message.author.username);
 
+    results.map((result) => {
+      addToHistory(message.channelId, message.author.username, result);
+    });
+
     message.channel.send({ embeds: [embed] });
   }
 });
@@ -108,4 +143,29 @@ function consoleLog(message, variables) {
   }
 
   console.log(message, variables);
+}
+
+// History methods
+function startHistory(channelId) {
+  return (history[channelId] = []);
+}
+
+function addToHistory(channelId, username, result) {
+  if (!history[channelId]) {
+    return;
+  }
+
+  if (!history[channelId][username]) {
+    history[channelId][username] = [];
+  }
+
+  return history[channelId][username].push(result);
+}
+
+function displayHistory(channelId) {
+  console.log('>>> history', history[channelId]);
+}
+
+function clearHistory(channelId) {
+  return (history[channelId] = {});
 }
