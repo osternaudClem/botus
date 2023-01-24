@@ -1,5 +1,13 @@
 {
+  "name": "botus",
+  "version": "0.1.0",
+  "description": "Generate random dice for discord RPG",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
-    "discord.js": "^14.3.0"
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.3"
   }
 }
