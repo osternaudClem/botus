@@ -4,7 +4,8 @@
   "description": "Generate random dice for discord RPG",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "debug": "DEBUG=true node index.js"
   },
   "dependencies": {
     "discord.js": "^14.3.0",
