@@ -17,7 +17,5 @@ jobs:
           command: |
             cd /home/debian/www/botus
             git pull origin master
-            git status
             yarn
-            yarn build
             pm2 reload all
