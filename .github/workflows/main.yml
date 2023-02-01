@@ -1,0 +1,23 @@
+name: Deployment Workflow
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using password
+        uses: fifsky/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          user: ${{ secrets.USER }}
+          key: ${{ secrets.KEY }}
+          command: |
+            cd /home/debian/www/botus
+            git pull origin master
+            git status
+            yarn
+            yarn build
+            pm2 reload all
