@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: executing remote ssh commands
-        uses: appleboy/ssh-action@v0.1.10
+        uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.KEY }}
           script: |
-            cd /home/debian/www/botus
+            cd /home/website/www/botus
             git pull origin main
             yarn
             pm2 restart ${{ secrets.PM2_ID }}

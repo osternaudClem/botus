@@ -7,9 +7,9 @@ dotenv.config();
 const DEBUG = process.env.DEBUG;
 
 const PREFIX = '!';
-const REGEX_DICE = new RegExp(/(\d*)(D)(\d*)?/i);
+const REGEX_DICE = /^(\d*)[dD](\d*)$/;
 const COLORS = {
-  succes: 0x3de232,
+  success: 0x3de232,
   failed: 0xe23236,
   default: 0x3281e2,
 };
@@ -34,28 +34,27 @@ client.on('messageCreate', (message) => {
   if (message.content.startsWith(PREFIX)) {
     const msg = message.content.substring(1);
 
-    message.member.displayName;
-
     if (!REGEX_DICE.test(msg)) return;
+
+    const [, diceNumberStr, diceLimitStr] = msg.match(REGEX_DICE);
+    const diceNumber = diceNumberStr ? parseInt(diceNumberStr, 10) : 1;
+    const diceLimit = diceLimitStr ? parseInt(diceLimitStr, 10) : 100;
+
+    if (isNaN(diceNumber) || isNaN(diceLimit)) return;
 
     let results = [];
 
-    const cmd = msg.split(REGEX_DICE);
-
-    const dice_number = cmd[1] || 1;
-    const dice_limit = cmd[3] || 100;
-
-    for (let i = 0; i < dice_number; i++) {
-      results.push(randomize(dice_limit));
+    for (let i = 0; i < diceNumber; i++) {
+      results.push(randomize(diceLimit));
     }
 
     consoleLog('>>> Roll dice', results);
 
     let color = COLORS.default;
 
-    if (dice_number === 1 && dice_limit === 100) {
+    if (diceNumber === 1 && diceLimit === 100) {
       if (results[0] <= 5) {
-        color = COLORS.succes;
+        color = COLORS.success;
       } else if (results[0] >= 95) {
         color = COLORS.failed;
       }
@@ -64,9 +63,9 @@ client.on('messageCreate', (message) => {
     const embed = new EmbedBuilder()
       .setColor(color)
       .setDescription(
-        `**${message.member.displayName}** a lancé ${dice_number} dé${
-          dice_number > 1 ? 's' : ''
-        } de ${dice_limit}`
+        `**${message.member.displayName}** a lancé ${diceNumber} dé${
+          diceNumber > 1 ? 's' : ''
+        } de ${diceLimit}`
       )
       .addFields({
         name: 'Résultats ',
@@ -84,9 +83,9 @@ client.on('messageCreate', (message) => {
 client.login(process.env.DISCORD_TOKEN);
 
 function randomize(limit) {
-  min = Math.ceil(1);
-  max = Math.floor(limit);
-  return Math.floor(Math.random() * (max - min)) + min;
+  const min = Math.ceil(1);
+  const max = Math.floor(limit);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function getSentence(embed, username) {
